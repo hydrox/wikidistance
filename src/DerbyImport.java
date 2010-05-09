@@ -2,14 +2,12 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Properties;
 
 
@@ -28,7 +26,8 @@ public class DerbyImport {
 	private PreparedStatement psInsertSite = null;
 	private PreparedStatement psInsertLink = null;
 	private Statement statement = null;
-	private ResultSet rs = null;
+
+	private Hashtable<String, Integer> idCache = new Hashtable<String,Integer>();
 	/**
 	 * @param args
 	 */
@@ -39,7 +38,6 @@ public class DerbyImport {
 			sites = new BufferedReader(new FileReader("sites"));
 			links = new BufferedReader(new FileReader("links"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -55,6 +53,26 @@ public class DerbyImport {
 				String [] site = line.split("<->");
 				if (site.length > 1) {
 					int status = importer.insertSite(site[0], Integer.parseInt(site[1]));
+				}
+			}
+			importer.flush();
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			int site = -1;
+			while (links.ready()) {
+				String line = links.readLine();
+				if (line == null)
+					continue;
+				if (line.contains("]")) {
+					site = Integer.parseInt(line.split("]")[0]);
+				}
+				else {
+					int status = importer.insertLink(site, line);
 				}
 			}
 			importer.flush();
@@ -96,7 +114,6 @@ public class DerbyImport {
 			psInsertLink = conn.prepareStatement("insert into links values (?, ?)");
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -109,24 +126,31 @@ public class DerbyImport {
 			psInsertSite.setInt(1, id);
 			psInsertSite.setString(2, title);
 			result = psInsertSite.executeUpdate();
+			idCache.put(title, id);
 			System.out.println("Inserted " + id + "\t" + title);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
 	}
 	
-	public int insertLink(int site, int link) {
+	public int insertLink(int site, String link) {
 		int result = -1;
 		try {
+			int linkId = -1; 
+			if (idCache.get(link) != null) {
+				linkId = idCache.get(link);
+			}
+			else
+				return result;
 			psInsertLink.setInt(1, site);
-			psInsertLink.setInt(2, link);
+			psInsertLink.setInt(2, linkId);
 			result = psInsertSite.executeUpdate();
-			System.out.println("Inserted " + site + " -> " + link);
+			System.out.println("Inserted " + site + " -> " + linkId);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(result);
 		}
 		return result;
 	}

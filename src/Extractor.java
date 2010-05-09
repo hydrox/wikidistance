@@ -126,7 +126,7 @@ public class Extractor {
 			if (M_TEXT.matcher(input).matches()) {
 				status = TEXT;
 				try {
-					links.write("[" + id + "]\n");
+					links.write(id + "]\n");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
