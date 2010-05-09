@@ -96,7 +96,7 @@ public class Extractor {
 			}
 			else if (input.contains(P_END_PAGE)) {
 				try {
-					sites.write(title + " -> " + id + "\n");
+					sites.write(title + "<->" + id + "\n");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
