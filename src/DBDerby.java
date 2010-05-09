@@ -106,7 +106,7 @@ public class DBDerby {
 		try {
 			psInsertLink.setInt(1, site);
 			psInsertLink.setInt(2, link);
-			result = psInsertSite.executeUpdate();
+			result = psInsertLink.executeUpdate();
 //			System.out.println("Inserted " + site + " -> " + link);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -116,7 +116,7 @@ public class DBDerby {
 	}
 
 	public int[] getLinksForSites(int[] sites) {
-		StringBuilder query = new StringBuilder("SELECT count(LINK) FROM links WHERE site = ");
+		StringBuilder query = new StringBuilder("SELECT LINK FROM links WHERE site = ");
 		for (int i=(sites.length - 1);i>0;i--) {
 			query.append(sites[i]);
 			query.append(" OR site = ");
