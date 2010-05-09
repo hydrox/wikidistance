@@ -28,6 +28,8 @@ public class DerbyImport {
 	private Statement statement = null;
 
 	private Hashtable<String, Integer> idCache = new Hashtable<String,Integer>();
+	
+	private DBDerby derbyDB = new DBDerby();
 	/**
 	 * @param args
 	 */
@@ -40,14 +42,11 @@ public class DerbyImport {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-        DerbyImport importer = new DerbyImport();
-        importer.loadDriver();
-        importer.initDB();
-        
-		try {
+
+		DerbyImport importer = new DerbyImport();
+		importer.initDB();
+
+        try {
 			while (sites.ready()) {
 				String line = sites.readLine();
 				String [] site = line.split("<->");
@@ -82,102 +81,28 @@ public class DerbyImport {
 			e.printStackTrace();
 		}
 	}
-
-	public void initDB() {
-        Properties props = new Properties(); // connection properties
-        // providing a user name and password is optional in the embedded
-        // and derbyclient frameworks
-//        props.put("user", "wikidist");
-//        props.put("password", "wikidist");
-        
-        String dbName = "wikidistance"; // the name of the database
-        
-        try {
-			conn = DriverManager.getConnection(protocol + dbName
-			        + ";create=true", props);
-
-            conn.setAutoCommit(false);
-
-            statement = conn.createStatement();
-            try {
-    			statement.execute("drop table sites");
-    			statement.execute("drop table links");
-            } catch (SQLException e) {
-    		}
-			statement.execute("create table sites (ID int, title varchar(255))");
-			System.out.println("Created table sites");
-
-			statement.execute("create table links (site int, link int)");
-			System.out.println("Created table links");
-			
-			psInsertSite = conn.prepareStatement("insert into sites values (?, ?)");
-			psInsertLink = conn.prepareStatement("insert into links values (?, ?)");
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-        System.out.println("Connected to and created database " + dbName);
-	}
 	
+	public void initDB() {
+		derbyDB.init();
+	}
 	public int insertSite(String title, int id) {
 		int result = -1;
-		try {
-			psInsertSite.setInt(1, id);
-			psInsertSite.setString(2, title);
-			result = psInsertSite.executeUpdate();
-			idCache.put(title, id);
-			System.out.println("Inserted " + id + "\t" + title);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
+		idCache.put(title, id);
+		return derbyDB.insertSite(title, id);
 	}
 	
 	public int insertLink(int site, String link) {
 		int result = -1;
-		try {
-			int linkId = -1; 
-			if (idCache.get(link) != null) {
-				linkId = idCache.get(link);
-			}
-			else
-				return result;
-			psInsertLink.setInt(1, site);
-			psInsertLink.setInt(2, linkId);
-			result = psInsertSite.executeUpdate();
-			System.out.println("Inserted " + site + " -> " + linkId);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(result);
+		int linkId = -1; 
+		if (idCache.get(link) != null) {
+			linkId = idCache.get(link);
 		}
-		return result;
+		else
+			return result;
+		return derbyDB.insertLink(site, linkId);
 	}
 	
 	public void flush() {
-		try {
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		derbyDB.flush();
 	}
-    private void loadDriver() {
-        try {
-            Class.forName(driver).newInstance();
-            System.out.println("Loaded the appropriate driver");
-        } catch (ClassNotFoundException cnfe) {
-            System.err.println("\nUnable to load the JDBC driver " + driver);
-            System.err.println("Please check your CLASSPATH.");
-            cnfe.printStackTrace(System.err);
-        } catch (InstantiationException ie) {
-            System.err.println(
-                        "\nUnable to instantiate the JDBC driver " + driver);
-            ie.printStackTrace(System.err);
-        } catch (IllegalAccessException iae) {
-            System.err.println(
-                        "\nNot allowed to access the JDBC driver " + driver);
-            iae.printStackTrace(System.err);
-        }
-    }
 }
