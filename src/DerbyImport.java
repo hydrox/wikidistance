@@ -59,6 +59,7 @@ public class DerbyImport {
 				}
 			}
 			importer.flush();
+			importer.shutdown();
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -87,5 +88,9 @@ public class DerbyImport {
 	
 	public void flush() {
 		derbyDB.flush();
+	}
+
+	public void shutdown() {
+		derbyDB.shutdown();
 	}
 }
