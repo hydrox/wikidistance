@@ -2,13 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Hashtable;
-import java.util.Properties;
 
 
 /**
@@ -16,16 +10,6 @@ import java.util.Properties;
  *
  */
 public class DerbyImport {
-
-	private String framework = "embedded";
-	private String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-	private String protocol = "jdbc:derby:";
-	
-	private Connection conn = null;
-
-	private PreparedStatement psInsertSite = null;
-	private PreparedStatement psInsertLink = null;
-	private Statement statement = null;
 
 	private Hashtable<String, Integer> idCache = new Hashtable<String,Integer>();
 	
@@ -86,7 +70,6 @@ public class DerbyImport {
 		derbyDB.init();
 	}
 	public int insertSite(String title, int id) {
-		int result = -1;
 		idCache.put(title, id);
 		return derbyDB.insertSite(title, id);
 	}
