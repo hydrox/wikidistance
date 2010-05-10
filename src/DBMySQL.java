@@ -3,15 +3,17 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 
-public class DBDerby  extends ADatabase{
+public class DBMySQL extends ADatabase{
 
 	private String framework = "embedded";
-	private String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-	private String protocol = "jdbc:derby:";
+	private String driver = "com.mysql.jdbc.Driver";
+	private String protocol = "jdbc:mysql://localhost/";
 
 	public void init() {
 		open();
+
 		try {
+			statement = conn.createStatement();
 			try {
 				statement.execute("drop table sites");
 				statement.execute("drop table links");
@@ -46,7 +48,7 @@ public class DBDerby  extends ADatabase{
 		try {
 			loadDriver(driver);
 			conn = DriverManager.getConnection(protocol + dbName
-					+ ";create=true", props);
+					+ "?user=wikidist&password=wikidist", props);
 			conn.setAutoCommit(false);
 
 			statement = conn.createStatement();

@@ -9,11 +9,11 @@ import java.util.Hashtable;
  * @author Matthias Söhnholz
  *
  */
-public class DerbyImport {
+public class Import {
 
 	private Hashtable<String, Integer> idCache = new Hashtable<String,Integer>();
 	
-	private DBDerby derbyDB = new DBDerby();
+	private ADatabase db = new DBDerby();
 	/**
 	 * @param args
 	 */
@@ -27,7 +27,7 @@ public class DerbyImport {
 			e.printStackTrace();
 		}
 
-		DerbyImport importer = new DerbyImport();
+		Import importer = new Import();
 		importer.initDB();
 
         try {
@@ -68,11 +68,11 @@ public class DerbyImport {
 	}
 	
 	public void initDB() {
-		derbyDB.init();
+		db.init();
 	}
 	public int insertSite(String title, int id) {
 		idCache.put(title, id);
-		return derbyDB.insertSite(title, id);
+		return db.insertSite(title, id);
 	}
 	
 	public int insertLink(int site, String link) {
@@ -83,14 +83,14 @@ public class DerbyImport {
 		}
 		else
 			return result;
-		return derbyDB.insertLink(site, linkId);
+		return db.insertLink(site, linkId);
 	}
 	
 	public void flush() {
-		derbyDB.flush();
+		db.flush();
 	}
 
 	public void shutdown() {
-		derbyDB.shutdown();
+		db.shutdown();
 	}
 }

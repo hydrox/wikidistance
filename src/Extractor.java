@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.derby.iapi.error.ShutdownException;
+
 
 /**
  * @author Matthias Söhnholz
@@ -162,6 +164,17 @@ public class Extractor {
 		}
 		return status;
 	}
+
+	public void shutdown() {
+		try {
+			sites.flush();
+			sites.close();
+			links.flush();
+			links.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * @param args commandline arguments
 	 */
@@ -192,6 +205,7 @@ public class Extractor {
 		} catch (IOException o) {
 			System.out.println(o.getMessage());
 		}
+		extractor.shutdown();
 	}
 
 }
