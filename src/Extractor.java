@@ -9,9 +9,6 @@ import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.derby.iapi.error.ShutdownException;
-
-
 /**
  * @author Matthias Söhnholz
  *

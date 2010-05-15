@@ -18,12 +18,6 @@ public class Distance {
 	public static void main(String[] args) {
 		Distance distance = new Distance();
 		distance.init();
-//		int [] test = {14695};
-//		int [] links = distance.getLinksForSites(test);
-//		for (int i : links) {
-//			System.out.print(i + ",");
-//		}
-		System.out.println();
 		int tempMax = -1;
 		for (int i=2;i<2000;i++) {
 			int temp = distance.findLongestDistance(i);
@@ -48,22 +42,19 @@ public class Distance {
 	}
 
 	public int findLongestDistance(int startpoint) {
-		maxDist=-1;
-		alreadySeen = new int [0];
+		maxDist=0;
+		alreadySeen = new int [1];
 		int [] toSearch = {startpoint};
 		HashSet<Integer> tempSeen = new HashSet<Integer>();
 		tempSeen.add(startpoint);
+		alreadySeen[0] = startpoint;
 		
 		while (tempSeen.size()>0) {
-			//System.out.print("   \r" + maxDist);
-			alreadySeen = extendArray(alreadySeen, tempSeen.size());
-			int i=0;
-			for (Integer integer : tempSeen) {
-				alreadySeen[i++] = integer;
-			}
+			maxDist++;
+			System.out.print("   \rdepth " + maxDist);
 
 			toSearch = new int[tempSeen.size()];
-			i=0;
+			int i=0;
 			for (Integer integer : tempSeen) {
 				toSearch[i++] = integer;
 			}
@@ -77,9 +68,15 @@ public class Distance {
 			for (Integer integer : alreadySeen) {
 				tempSeen.remove(integer);
 			}
-			maxDist++;
-			//System.out.print("\r");
+			alreadySeen = extendArray(alreadySeen, tempSeen.size());
+
+			i=0;
+			for (Integer integer : tempSeen) {
+				alreadySeen[i++] = integer;
+			}
+			System.out.print("\r");
 		}
+		maxDist--;
 		return maxDist;
 	}
 	

@@ -23,7 +23,7 @@ public class DBMySQL extends ADatabase{
 			statement.execute("create index index_sites on sites(ID)");
 			System.out.println("Created table sites");
 			statement.execute("create table links (site int, link int)");
-			statement.execute("create index index_links on links (site)");
+			statement.execute("create index index_links on links (site,link)");
 			System.out.println("Created table links");
 			
 			psInsertSite = conn.prepareStatement("insert into sites values (?, ?)");

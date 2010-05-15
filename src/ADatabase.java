@@ -74,6 +74,7 @@ public abstract class ADatabase {
 				e.printStackTrace();
 			}
 			link_a_count++;
+			System.out.print("            \r\t\t" + Math.min(sites.length, i+chunkSize)*100/sites.length + "%");
 		}
 		return links_a;
 	}
