@@ -2,7 +2,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-
+/**
+ * This class connects to a Derby SQL-database.
+ * @author Matthias Söhnholz
+ *
+ */
 public class DBDerby  extends ADatabase{
 
 	private String framework = "embedded";

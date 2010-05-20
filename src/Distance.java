@@ -1,6 +1,5 @@
 import java.util.HashSet;
 
-
 /**
  * @author Matthias Söhnholz
  *

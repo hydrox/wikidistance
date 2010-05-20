@@ -3,10 +3,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Iterator;
 
-
+/**
+ * This Class provides the nessesery functions to interact with a SQL database.
+ * @author Matthias Söhnholz
+ *
+ */
 public abstract class ADatabase {
 
 	protected Connection conn = null;
@@ -15,9 +17,22 @@ public abstract class ADatabase {
 	protected PreparedStatement psInsertLink = null;
 	protected Statement statement = null;
 	
+	/**
+	 * Initilses the database
+	 */
 	abstract public void init();
-	abstract public void open();
 	
+	/**
+	 * Opens the database
+	 */
+	abstract public void open();
+
+	/**
+	 * inserts a site-id and the corresponding site-title into the database.
+	 * @param title title of the site
+	 * @param id id of the site
+	 * @return count of manipuleted rows
+	 */
 	public int insertSite(String title, int id) {
 		int result = -1;
 		try {
@@ -31,6 +46,12 @@ public abstract class ADatabase {
 		return result;
 	}
 
+	/**
+	 * inserts a link into the database.
+	 * @param site site-id the link comes from
+	 * @param link site-id the link points to
+	 * @return count of manipuleted rows
+	 */
 	public int insertLink(int site, int link) {
 		int result = -1;
 		try {
@@ -43,6 +64,11 @@ public abstract class ADatabase {
 		return result;
 	}
 
+	/**
+	 * gets the links for a given array of site-ids
+	 * @param sites array of site-ids
+	 * @return as of yet ugly array of links due to limitations of querysize
+	 */
 	public int[][] getLinksForSites(int[] sites) {
 		int chunkSize = 10;
 		int[][] links_a = new int[(sites.length/chunkSize)+1][];
@@ -79,6 +105,9 @@ public abstract class ADatabase {
 		return links_a;
 	}
 
+	/**
+	 * flushs all upcoming changes to the database.
+	 */
 	public void flush() {
 		try {
 			conn.commit();
@@ -87,6 +116,9 @@ public abstract class ADatabase {
 		}
 	}
 
+	/**
+	 * shutsdown the database
+	 */
 	public void shutdown()
 	{
 		try
