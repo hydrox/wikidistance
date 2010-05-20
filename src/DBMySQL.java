@@ -3,12 +3,12 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
+ * This class connects to a MySQL-database.
  * @author Matthias Söhnholz
  *
  */
 public class DBMySQL extends ADatabase{
 
-	private String framework = "embedded";
 	private String driver = "com.mysql.jdbc.Driver";
 	private String protocol = "jdbc:mysql://localhost/";
 

@@ -12,7 +12,7 @@ public class Distance {
 	private int maxDist = -1;
 
 	/**
-	 * @param args
+	 * @param args commandlin arguments
 	 */
 	public static void main(String[] args) {
 		Distance distance = new Distance();

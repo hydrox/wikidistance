@@ -9,7 +9,6 @@ import java.util.Properties;
  */
 public class DBDerby  extends ADatabase{
 
-	private String framework = "embedded";
 	private String driver = "org.apache.derby.jdbc.EmbeddedDriver";
 	private String protocol = "jdbc:derby:";
 
